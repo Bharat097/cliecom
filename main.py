@@ -7,6 +7,7 @@ from order import OrderManager
 from base import session
 from sqlalchemy.orm import exc
 from constants import *
+import json
 
 
 class Driver:
@@ -17,13 +18,13 @@ class Driver:
         self.is_admin = False
         self.cart_items = None
 
-        self.login()
+        # self.login()
 
         self.category_manager = CategoryManager()
         self.cart_manager = CartManager()
         self.product_manager = ProductManager()
         self.user_manager = UserManager()
-        self.order_manager = OrderManager(self.user)
+        self.order_manager = OrderManager()
 
     def login(self):
         email = input('Enter E-mail: ')
@@ -92,16 +93,25 @@ class Driver:
 
     def place_order(self):
         items = []
+        self.order_manager.create_order(self.user)
         while True:
             item = self.display_cart(action='select')
             self.order_manager.add_item(item=item.product, quantity=item.quantity)
             items.append(item)
+            self.cart_manager.remove_item(product=item, silent=True, commit=False)
             add_more = input('Want to add more items from cart? (y/n)')
             if add_more not in ['y', 'Y', 'Yes', 'YES', 'yes']:
                 break
         print('Order Placed.')
-        for each in items:
-            self.cart_manager.remove_item(product=each)
+        res = self.order_manager.is_discount()
+        if res[1]:
+            print('Voila.. You got 500 discount on this order')
+            print(f'Order Amount: {res[0]}, Discount: 500, Net Payable: {res[0]-500}')
+        else:
+            print(f'Order Amount: {res[0]}, Net Payable: {res[0]}')
+
+        self.cart_manager.commit_changes()
+        self.order_manager.complete_order()
 
     def is_already_added_to_cart(self, product):
         for cart_item in self.user.cart_items:
@@ -140,6 +150,12 @@ class Driver:
         for index, category in enumerate(categories, 1):
             print(f'{index}. {category}')
 
+    def create_user(self):
+        user_detail = {}
+        for key, value in USER_DETAILS.items():
+            user_detail[key] = input(f'Enter {value}: ')
+        self.user_manager.add_user(**user_detail)
+
     def start_admin_flow(self):
         while True:
             print('Select option: ')
@@ -152,26 +168,34 @@ class Driver:
                 #   Add Category
                 category_detail = self.collect_category_details()
                 self.category_manager.add_category(**category_detail)
+                input('Press Enter to Continue..')
 
             elif admin_choice == 2:
                 #   Add Product
                 product_details = self.collect_product_details()
                 self.product_manager.add_product(**product_details)
+                input('Press Enter to Continue..')
 
             elif admin_choice == 3:
                 #   View Cart Details
                 for_user = self.select_user()
                 self.display_user_cart(for_user)
+                input('Press Enter to Continue..')
 
             elif admin_choice == 4:
                 #   View Bills
-                print('Function Under Construction')
+                user = self.select_user()
+                bill = self.user_manager.list_bills(user=user)
+                # print('Function Under Construction')
+                print(json.dumps(bill, indent=4, default=str))
+                input('Press Enter to Continue..')
 
             elif admin_choice == 5:
                 return
 
             else:
                 print('Enter Valid Input')
+                input('Press Enter to Continue..')
 
     def start_user_flow(self):
         while True:
@@ -226,7 +250,15 @@ if __name__ == '__main__':
     try:
         d = Driver()
 
+        for i, val in enumerate(CREATE_OR_LOGIN, 1):
+            print(f'{i}. {val}')
+        choice = int(input())
+
+        if choice == 1:
+            d.create_user()
+
         if not d.logged_in:
+            print('\nLog in to Account')
             d.login()
 
         while True:

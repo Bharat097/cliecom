@@ -12,6 +12,7 @@ class ProductManager:
             new_product = Product(name=product_name, description=desc, price=price)
             self.add_category_to_product(new_product, category)
             self.save_changes(new_product)
+            print(f'product {new_product} added successfully\n')
         except Exception as e:
             print(e)
 

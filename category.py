@@ -10,6 +10,7 @@ class CategoryManager:
         new_category = Category(name=category_name)
 
         self.save_changes(new_category)
+        print(f'category {new_category} added successfully\n')
 
     def list_categories(self):
         categories = self.session.query(Category).order_by(Category.name).all()
@@ -22,15 +23,3 @@ class CategoryManager:
     def save_changes(self, changes):
         self.session.add(changes)
         self.session.commit()
-
-
-if __name__ == '__main__':
-    c = CategoryManager()
-    # c.list_categories()
-    # c.list_products_by_category(category_name='Automobiles')
-    # c.add_category('Electronics')
-    # c.add_category('Men')
-    # c.add_category('Women')
-    # c.add_category('Automobiles')
-    # c.add_category('Education')
-    # c.add_category('Sports')

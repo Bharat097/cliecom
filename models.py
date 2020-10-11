@@ -11,7 +11,7 @@ class User(Base):
     email = Column(String, unique=True)
     name = Column(String(length=20))
     password = Column(String)
-    is_admin = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=True)
 
     cart_items = relationship('Cart', back_populates='user')
     orders = relationship('Order', back_populates='user')
@@ -107,6 +107,16 @@ class Order(Base):
         self.completed = completed
         self.created = created
         self.user = user
+
+    @property
+    def order_amount(self):
+        total = 0
+        items = self.order_items
+
+        for item in items:
+            total += (item.product.price * item.quantity)
+
+        return total
 
 
 class OrderItem(Base):

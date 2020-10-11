@@ -15,31 +15,21 @@ class CartManager:
         item.quantity += quantity
         self.save_changes(item)
 
-    def remove_item(self, product):
+    def remove_item(self, product, silent=False, commit=True):
         item = self.session.query(Cart).filter_by(product_id=product.product_id).all()
-        self.save_changes(item[0], action='delete')
-        print(f'product successfully removed from cart')
+        self.save_changes(item[0], action='delete', commit=commit)
+        if not silent:
+            print(f'product successfully removed from cart')
 
-    def save_changes(self, changes, action='add'):
+    def save_changes(self, changes, action='add', commit=True):
         if action == 'add':
             self.session.add(changes)
         elif action == 'delete':
             self.session.delete(changes)
         else:
             print('Invalid action specified')
+        if commit:
+            self.session.commit()
+
+    def commit_changes(self):
         self.session.commit()
-
-    # def list_cart_users(self):
-    #     users = self.session.query(Cart.user).distinct().all()
-    #     return users
-
-
-# u = User('bharat', 'b@gmail.com', '1234')
-# session.add(u)
-# session.commit()
-# u = session.query(User).filter_by(name='bharat').one()
-# p = session.query(Product).filter_by(name='Jeep').one()
-#
-# m = CartManager(u)
-# m.add_item(u, p, 1)
-# m.remove_item(p)

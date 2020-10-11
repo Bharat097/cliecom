@@ -3,6 +3,11 @@ FLOW = [
         'Admin Flow'
     ]
 
+CREATE_OR_LOGIN = [
+    'Create Account',
+    'Login'
+]
+
 ACTIONS = {
     'user': [
         'List Categories',
@@ -11,7 +16,7 @@ ACTIONS = {
         'View Cart',
         'Add Product to Cart',
         'Remove Product from Cart',
-        'Place Order'
+        'Place Order',
         'Go Back'
     ],
     'admin': [
@@ -32,4 +37,10 @@ PRODUCT_DETAILS = {
     'desc': 'Product Description',
     'price': 'Product Price',
     'category': 'Category'
+}
+
+USER_DETAILS = {
+    'name': 'Enter Name',
+    'email': 'Enter Email',
+    'password': 'Enter Password'
 }
