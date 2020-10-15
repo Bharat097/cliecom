@@ -1,9 +1,9 @@
 from models import Category, Product
-from base import session
+# from base import session
 
 
 class CategoryManager:
-    def __init__(self):
+    def __init__(self, session):
         self.session = session
 
     def add_category(self, category_name):

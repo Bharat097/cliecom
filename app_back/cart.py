@@ -1,9 +1,9 @@
 from models import Cart
-from base import session
+# from base import session
 
 
 class CartManager:
-    def __init__(self):
+    def __init__(self, session):
         self.session = session
 
     def add_item(self, user, product, quantity):

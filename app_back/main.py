@@ -20,11 +20,11 @@ class Driver:
 
         # self.login()
 
-        self.category_manager = CategoryManager()
-        self.cart_manager = CartManager()
-        self.product_manager = ProductManager()
-        self.user_manager = UserManager()
-        self.order_manager = OrderManager()
+        self.category_manager = CategoryManager(session=session)
+        self.cart_manager = CartManager(session=session)
+        self.product_manager = ProductManager(session=session)
+        self.user_manager = UserManager(session=session)
+        self.order_manager = OrderManager(session=session)
 
     def login(self):
         email = input('Enter E-mail: ')

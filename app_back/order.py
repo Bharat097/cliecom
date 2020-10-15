@@ -1,9 +1,9 @@
 from models import Order, OrderItem, User
-from base import session
+# from base import session
 
 
 class OrderManager:
-    def __init__(self):
+    def __init__(self, session):
         self.session = session
         self.order = None
 

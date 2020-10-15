@@ -1,10 +1,9 @@
 from models import Product, Category
-from base import session
 from sqlalchemy.orm import exc
 
 
 class ProductManager:
-    def __init__(self):
+    def __init__(self, session):
         self.session = session
 
     def add_product(self, product_name, desc, price, category):
@@ -39,9 +38,3 @@ class ProductManager:
     def save_changes(self, changes):
         self.session.add(changes)
         self.session.commit()
-
-
-# m = ProductManager()
-# m.add_product('Jeep', 'Jeep Description', 9000, 'Automobiles')
-# m.list_products(category='Automobiles')
-# m.view_details(2)

@@ -1,10 +1,8 @@
 from models import User
-from base import session
-# from sqlalchemy.orm import exc
 
 
 class UserManager:
-    def __init__(self):
+    def __init__(self, session):
         self.session = session
 
     def add_user(self, name, email, password):
