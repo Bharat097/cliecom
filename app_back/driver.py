@@ -11,7 +11,7 @@ import json
 
 
 class Driver:
-    def __init__(self):
+    def __init__(self, session):
         self.session = session
         self.logged_in = False
         self.user = None
@@ -246,9 +246,9 @@ class Driver:
                 print('Enter Valid Input')
 
 
-if __name__ == '__main__':
+def main():
     try:
-        d = Driver()
+        d = Driver(session)
 
         for i, val in enumerate(CREATE_OR_LOGIN, 1):
             print(f'{i}. {val}')
@@ -271,7 +271,14 @@ if __name__ == '__main__':
                     d.start_user_flow()
                 elif choice == 2:
                     d.start_admin_flow()
+                elif choice == 3:
+                    break
                 else:
                     print('Invalid input provided')
+        print('Exited from the App.')
     except Exception as e:
         print(f'Error Occurred: {e}')
+
+
+if __name__ == '__main__':
+    main()
